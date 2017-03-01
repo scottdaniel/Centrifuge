@@ -1,6 +1,12 @@
 # Centrifuge
 Run Centrifuge on metagenomic samples and generate bubble plot visualizations.
 
+QUICKSTART:
+
+1. Edit config.sh
+2. ./submit.sh
+
+
 Edit the variables found in config.sh. Here is a description of each:
 
 - Leave these two the same
