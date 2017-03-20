@@ -22,4 +22,4 @@ done < $FASTA_LIST
 
 module load R/3.2.1
 
-Rscript --vanilla $SCRIPT_DIR/centrifuge_bubble.R $REPORT_DIR $PLOT_OUT $PLOT_FILE $PLOT_TITLE
+Rscript --vanilla $SCRIPT_DIR/centrifuge_bubble.R $REPORT_DIR $PLOT_OUT $EXCLUDE $PLOT_FILE $PLOT_TITLE

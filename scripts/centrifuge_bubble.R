@@ -17,25 +17,27 @@ sample_names <- as.list(sub("-centrifuge_report.tsv", "", temp))
 myfiles = Map(cbind, myfiles, sample = sample_names)
 
 #Filter settings, default is to remove human and synthetic constructs
-filter <- llply(myfiles, subset, name != "Homo sapiens")
-filter2 <- llply(filter, subset, name != "synthetic construct")
+exclude <- unlist(strsplit(args[3],","))
 
+for (i in exclude) {
+myfiles <- llply(myfiles, function(x)x[x$name!=i,])
+}
 #Proportion calculations: Each species "Number of Unique Reads" is divided by total "Unique Reads"
-props = lapply(filter2, function(x) { 
+props = lapply(myfiles, function(x) { 
     x$proportion <- (x$numUniqueReads / sum(x$numUniqueReads))
     return(x[,c("name","proportion","sample")])
 })
 
 #Final dataframe created for plotting, can change proportion value (Default 1%)
-final <- llply(props, subset, proportion > 0.02)
+final <- llply(props, subset, proportion > 0.05)
 df <- ldply(final, data.frame)
 
 names(df) <- c("x", "Proportion", "z")
 
 #SCATTER PLOT WITH POINT SIZE
 #Set file name and bubble plot title. Stored in out.dir
-file_name <- args[3]
-plot_title <- args[4]
+file_name <- args[4]
+plot_title <- args[5]
 
 options(bitmapType='cairo')
 png(filename=paste0(out.dir, paste0(file_name,".png")), width = 800, height = 800)
