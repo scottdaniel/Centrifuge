@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #PBS -W group_list=bhurwitz
-#PBS -q windfall
+#PBS -q standard
 #PBS -l select=1:ncpus=12:mem=23gb
 #PBS -l pvmem=22gb
 #PBS -l walltime=24:00:00
@@ -10,16 +10,18 @@
 #PBS -m bea
 
 cd "$FASTA_DIR"
-export FASTA_LIST="$FASTA_DIR/fasta-list"
-ls *.$FILE_EXT | cut -d '.' -f 1 | uniq > $FASTA_LIST
+export FASTA_LIST="$REPORT_DIR/fasta-list"
+ls *.$FILE_EXT | uniq > $FASTA_LIST
 echo "FASTA files to be processed:" $(cat $FASTA_LIST)
 
 while read FASTA; do
-
-  centrifuge -x $CENT_DB -U $FASTA.$FILE_EXT -S $REPORT_DIR/$FASTA-centrifuge_hits.tsv --report-file $REPORT_DIR/$FASTA-centrifuge_report.tsv -$FILE_TYPE
+  FILE_NAME=$(basename $FASTA | cut -d '.' -f 1)
+  centrifuge -x $CENT_DB -U $FASTA -S $REPORT_DIR/$FILE_NAME-centrifuge_hits.tsv --report-file $REPORT_DIR/$FILE_NAME-centrifuge_report.tsv -$FILE_TYPE --exclude-taxids $EXCLUDE
 
 done < $FASTA_LIST
 
-module load R/3.2.1
+module load unsupported
+module load markb/R/3.1.1
 
-Rscript --vanilla $SCRIPT_DIR/centrifuge_bubble.R $REPORT_DIR $PLOT_OUT $EXCLUDE $PLOT_FILE $PLOT_TITLE
+$SCRIPT_DIR/centrifuge_bubble.R -d $REPORT_DIR -o $PLOT_OUT -f $PLOT_FILE -t $PLOT_TITLE
+

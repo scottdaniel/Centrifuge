@@ -16,10 +16,11 @@ echo "FASTA files to be processed:" $(cat $FASTA_LIST)
 
 while read FASTA; do
 
-  centrifuge -x $CENT_DB -1 $FASTA.paired.1.fastq -2 $FASTA.paired.2.fastq -U $FASTA.singletons.fastq -S $REPORT_DIR/$FASTA-centrifuge_hits.tsv --report-file $REPORT_DIR/$FASTA-centrifuge_report.tsv -$FILE_TYPE
+  centrifuge -x $CENT_DB -1 $FASTA.paired.1.fastq -2 $FASTA.paired.2.fastq -U $FASTA.singletons.fastq -S $REPORT_DIR/$FASTA-centrifuge_hits.tsv --report-file $REPORT_DIR/$FASTA-centrifuge_report.tsv -$FILE_TYPE --exclude-taxids $EXCLUDE
 
 done < $FASTA_LIST
 
-module load R/3.2.1
+module load unsupported
+module load markb/R/3.1.1
 
-Rscript --vanilla $SCRIPT_DIR/centrifuge_bubble.R $REPORT_DIR $PLOT_OUT $PLOT_FILE $PLOT_TITLE
+$SCRIPT_DIR/centrifuge_bubble.R -d $REPORT_DIR -o $PLOT_OUT -f $PLOT_FILE -t $PLOT_TITLE

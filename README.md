@@ -14,7 +14,7 @@ export CWD=$PWD
 export SCRIPT_DIR="CWD/scripts"
 
 -State where the Centrifuge Database is located. Default for Hurwitz Lab
-export CENT_DB="/rsgrps/bh_class/b_compressed+h+v/b_compressed+h+v"
+export CENT_DB="/rsgrps/bhurwitz/jetjr/cent-db/p_compressed+h+v"
 
 -Directory with sample FASTA/Q files
 export FASTA_DIR="/path/to/your/fasta/files"
@@ -43,10 +43,13 @@ export PLOT_OUT="/plot/goes/here"
 export PLOT_FILE="$PLOT_OUT"/bubble
 
 -Plot title is the actual title found on the plot
-export PLOT_TITLE="MY BUBBLE PLOT"
+export PLOT_TITLE="MY_BUBBLE_PLOT"
 
 -File type is either "f" for fasta format or "q" for fastq format
 export FILE_TYPE="q"
+
+#Exclude hits by stating taxid in following format ("taxid1,taxid2")
+export EXCLUDE="9606" (would exclude Homo sapiens). 
 
 # Paired End Files
 If you are using paired-end files you also must edit the script centrifuge_paired_tax.sh
@@ -57,19 +60,12 @@ centrifuge -x $CENT_DB -1 $FASTA.paired.1.fastq -2 $FASTA.paired.2.fastq -U $FAS
 
 -1 is the forward reads, -2 is the reverse, and -U is single reads. You must change the naming scheme of the paired end files. In this example the paired end files use paired.1.fastq for forward and paired.2.fastq for the reverse. A file of single reads singletons.fastq is also inputted. If you do not have single reads to accompany the paired end make sure to remove the -U option. 
 
+# Using centrifuge_bubble.R on its own
+If you already have centrifuge report files, there is no need to run the entire workflow to generate the bubble plot. Instead the bubble plot can be used on its own:
+
+./centrifuge_bubble.R -d /report/directory/ -o /plot/out/dir -f file_name -t file_title
+
 # Editing the centrifuge_bubble.R
-This script is written to exclude Homo sapiens and Synthetic Construct classfications. This is performed in the centrifuge_bubble.R script in the following code (line 19):
-
-filter <- llply(myfiles, subset, name != "Homo sapiens")
-filter2 <- llply(filter, subset, name != "synthetic construct")
-
-This can be changed to filter any species and will not be used in the proportional classification calculations. Just notice that each subsequent filter should use the previous dataset to subset. So for example if I want to add a third filter for E. coli it would look like:
-
-filter3 <- llply(filter2, subset, name != "Escherichia coli")
-
-and I must aslo change the props object to include the most recent filter (line 23):
-
-props = llaply(filter3, .....)
 
 Included in the script is a subset that only includes classifications reaching a specific threshold with the default being 1% (line 29). Simply change the proportion > 0.01 to whatever value you desire. Often it is necessary to increase this value if too many species are classified at the 1% level. 
 

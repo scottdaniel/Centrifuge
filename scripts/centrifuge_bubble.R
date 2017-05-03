@@ -1,15 +1,59 @@
 #!/usr/bin/env Rscript
 
+library(optparse)
 library(plyr)
 library(ggplot2)
 
 args = commandArgs(trailingOnly=TRUE)
 
-#SETWD: Location of centrifuge_report.tsv files. Should all be in same directory
-setwd(args[1])
+option_list = list(
+  make_option(
+    c("-d", "--dir"),
+    default = "",
+    type = "character",
+    help = "Centrifuge outdir",
+    metavar = "character"
+  ),
+  make_option(
+    c("-e", "--exclude"),
+    default = "",
+    type = "character",
+    help = "Species to exclude",
+    metavar = "character"
+  ),
+  make_option(
+    c("-o", "--outdir"),
+    default = file.path(getwd(), "plots"),
+    type = "character",
+    help = "out directory",
+    metavar = "character"
+  ),
+  make_option(
+    c("-f", "--outfile"),
+    default = 'bubble',
+    type = "character",
+    help = "out file",
+    metavar = "character"
+  ),
+  make_option(
+    c("-t", "--title"),
+    default = 'bubble',
+    type = "character",
+    help = "plot title",
+    metavar = "character"
+  )
+);
 
-#OUTPUT Directory: Location to store bubble plot and summary data file
-out.dir <- args[2]
+opt_parser = OptionParser(option_list = option_list);
+opt        = parse_args(opt_parser);
+cent.dir   = opt$dir
+out.dir    = opt$outdir
+file_name  = opt$outfile
+plot_title = opt$title
+exclude    = unlist(strsplit(opt$exclude,","))
+
+#SETWD: Location of centrifuge_report.tsv files. Should all be in same directory
+setwd(cent.dir)
 
 temp = list.files(pattern="*report.tsv")
 myfiles = lapply(temp, read.delim)
@@ -17,30 +61,28 @@ sample_names <- as.list(sub("-centrifuge_report.tsv", "", temp))
 myfiles = Map(cbind, myfiles, sample = sample_names)
 
 #Filter settings, default is to remove human and synthetic constructs
-exclude <- unlist(strsplit(args[3],","))
 
 for (i in exclude) {
-myfiles <- llply(myfiles, function(x)x[x$name!=i,])
+  myfiles <- llply(myfiles, function(x)x[x$name!=i,])
 }
+
 #Proportion calculations: Each species "Number of Unique Reads" is divided by total "Unique Reads"
 props = lapply(myfiles, function(x) { 
     x$proportion <- (x$numUniqueReads / sum(x$numUniqueReads))
-    return(x[,c("name","proportion","sample")])
+    return(x[,c("name","proportion","sample","numUniqueReads","abundance")])
 })
 
 #Final dataframe created for plotting, can change proportion value (Default 1%)
-final <- llply(props, subset, proportion > 0.05)
+final <- llply(props, subset, proportion > 0.01)
 df <- ldply(final, data.frame)
 
 names(df) <- c("x", "Proportion", "z")
 
 #SCATTER PLOT WITH POINT SIZE
 #Set file name and bubble plot title. Stored in out.dir
-file_name <- args[4]
-plot_title <- args[5]
 
-options(bitmapType='cairo')
-png(filename=paste0(out.dir, paste0(file_name,".png")), width = 800, height = 800)
+#options(bitmapType='cairo')
+jpeg(filename=paste0(out.dir, paste0(file_name,".jpeg")), width = 800, height = 800)
 p2 <- ggplot(df, aes(as.factor(z), as.factor(x))) + geom_point(aes(size = Proportion))
 p2 <- p2 + theme(text = element_text(size=20), axis.text.x = element_text(angle = 90, hjust = 1))
 p2 <- p2 + labs(y = "Organism", x = "Sample")
