@@ -76,14 +76,13 @@ props = lapply(myfiles, function(x) {
 final <- llply(props, subset, proportion > 0.01)
 df <- ldply(final, data.frame)
 
-names(df) <- c("x", "Proportion", "z")
+names(df) <- c("x", "Proportion", "z", "numUniqueReads", "abundance")
 
 #SCATTER PLOT WITH POINT SIZE
 #Set file name and bubble plot title. Stored in out.dir
 
-#options(bitmapType='cairo')
 jpeg(filename=paste0(out.dir, paste0(file_name,".jpeg")), width = 800, height = 800)
-p2 <- ggplot(df, aes(as.factor(z), as.factor(x))) + geom_point(aes(size = Proportion))
+p2 <- ggplot(df, aes(as.factor(z), as.factor(x))) + geom_point(aes(size = abundance))
 p2 <- p2 + theme(text = element_text(size=20), axis.text.x = element_text(angle = 90, hjust = 1))
 p2 <- p2 + labs(y = "Organism", x = "Sample")
 p2 <- p2 + ggtitle(plot_title) + theme(plot.title = element_text(hjust = 0.5))

@@ -1,5 +1,6 @@
 #!/bin/sh
 
+#GET AND CHECK VARIABLE DECLARATIONS
 source ./config.sh
 
 if [[ ! -d "$FASTA_DIR" ]]; then
@@ -37,15 +38,21 @@ if [[ ! -d "$STDOUT_DIR" ]]; then
     mkdir -p "$STDOUT_DIR"
 fi
 
-if [[ "$TYPE" = "single" ]]; then
-JOB1=`qsub -v FASTA_DIR,SCRIPT_DIR,CENT_DB,FILE_EXT,REPORT_DIR,FILE_TYPE,PLOT_OUT,PLOT_FILE,PLOT_TITLE,EXCLUDE -N S_Centrifuge -e "$STDERR_DIR" -o "$STDOUT_DIR" $SCRIPT_DIR/centrifuge_single_tax.sh`
 
+#JOB SUBMISSION FOR SINGLE END DATA
+if [[ "$TYPE" = "single" ]]; then
+  
+  JOB1=`qsub -v FASTA_DIR,SCRIPT_DIR,CENT_DB,FILE_EXT,REPORT_DIR,FILE_TYPE,PLOT_OUT,PLOT_FILE,PLOT_TITLE,EXCLUDE -N S_Centrifuge -e "$STDERR_DIR" -o "$STDOUT_DIR" $SCRIPT_DIR/centrifuge_single_tax.sh`
+
+#JOB SUBMISSION FOR PAIRED END DATA
 elif [[ "$TYPE" = "paired" ]]; then
-JOB1=`qsub -v FASTA_DIR,SCRIPT_DIR,CENT_DB,FILE_EXT,REPORT_DIR,FILE_TYPE,PLOT_OUT,PLOT_FILE,PLOT_TITLE,EXCLUDE -N P_Centrifuge -e "$STDERR_DIR" -o "$STDOUT_DIR" $SCRIPT_DIR/centrifuge_paired_tax.sh`
+
+  JOB1=`qsub -v FASTA_DIR,SCRIPT_DIR,CENT_DB,FILE_EXT,REPORT_DIR,FILE_TYPE,PLOT_OUT,PLOT_FILE,PLOT_TITLE,EXCLUDE -N P_Centrifuge -e "$STDERR_DIR" -o "$STDOUT_DIR" $SCRIPT_DIR/centrifuge_paired_tax.sh`
 
 else
- echo "TYPE must be either 'single' or 'paired'. Edit config.sh. Job terminated."
- exit 1
+
+  echo "TYPE must be either 'single' or 'paired'. Edit config.sh. Job terminated."
+  exit 1
 fi
 
 
