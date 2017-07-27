@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #PBS -W group_list=bhurwitz
-#PBS -q windfall
+#PBS -q standard
 #PBS -l select=1:ncpus=12:mem=23gb
 #PBS -l pvmem=22gb
 #PBS -l walltime=24:00:00
