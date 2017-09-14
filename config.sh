@@ -21,11 +21,11 @@ export TYPE="paired"
 export FILE_EXT="fastq.gz"
 
 #Centrifuge Report Out Directory
-export REPORT_DIR="/rsgrps/bhurwitz/hurwitzlab/data/raw/Doetschman_20111007/human/sra/cfuge"
+export REPORT_DIR="$FASTA_DIR/cfuge"
 
 #Bubble Plot Out Directory
 #IMPORTANT NOTE: Make sure to include the '/' at the end of the path to satisfy R
-export PLOT_OUT="/rsgrps/bhurwitz/hurwitzlab/data/raw/Doetschman_20111007/human/sra/cfuge/plot/"
+export PLOT_OUT="$REPORT_DIR/plot/"
 
 #Plot file name and title (No spaces, use _)
 export PLOT_FILE="HumanCRCbacteria"
