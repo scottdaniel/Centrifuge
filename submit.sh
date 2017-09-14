@@ -3,8 +3,8 @@
 #GET AND CHECK VARIABLE DECLARATIONS
 source ./config.sh
 
-if [[ ! -d "$FASTA_DIR" ]]; then
-    echo "$FASTA_DIR does not exist. Job terminated."
+if [[ ! -d "$HPC_WORK_DIR" ]]; then
+    echo "$HPC_WORK_DIR does not exist. Job terminated."
     exit 1
 fi
 sleep 1
@@ -49,12 +49,12 @@ sleep 1
 #JOB SUBMISSION FOR SINGLE END DATA
 if [[ "$TYPE" = "single" ]]; then
   
-  JOB1=`qsub -v FASTA_DIR,SCRIPT_DIR,CENT_DB,FILE_EXT,REPORT_DIR,FILE_TYPE,PLOT_OUT,PLOT_FILE,PLOT_TITLE,EXCLUDE -N S_Centrifuge -e "$STDERR_DIR" -o "$STDOUT_DIR" $SCRIPT_DIR/centrifuge_single_tax.sh`
+  JOB1=`qsub -v HPC_WORK_DIR,SCRIPT_DIR,CENT_DB,FILE_EXT,REPORT_DIR,FILE_TYPE,PLOT_OUT,PLOT_FILE,PLOT_TITLE,EXCLUDE -N S_Centrifuge -e "$STDERR_DIR" -o "$STDOUT_DIR" $SCRIPT_DIR/centrifuge_single_tax.sh`
 
 #JOB SUBMISSION FOR PAIRED END DATA
 elif [[ "$TYPE" = "paired" ]]; then
 
-  JOB1=`qsub -v FASTA_DIR,SCRIPT_DIR,CENT_DB,FILE_EXT,REPORT_DIR,FILE_TYPE,PLOT_OUT,PLOT_FILE,PLOT_TITLE,EXCLUDE -N P_Centrifuge -e "$STDERR_DIR" -o "$STDOUT_DIR" $SCRIPT_DIR/centrifuge_paired_tax.sh`
+  JOB1=`qsub -v HPC_WORK_DIR,SCRIPT_DIR,CENT_DB,FILE_EXT,REPORT_DIR,FILE_TYPE,PLOT_OUT,PLOT_FILE,PLOT_TITLE,EXCLUDE -N P_Centrifuge -e "$STDERR_DIR" -o "$STDOUT_DIR" $SCRIPT_DIR/centrifuge_paired_tax.sh`
 
 else
 

@@ -1,0 +1,16 @@
+
+This worked during an interactive session:
+
+FASTA="SRR1592383"
+SING_IMG="/rsgrps/bhurwitz/scottdaniel/singularity_images"
+
+centrifuge="singularity run -B $CENT_DB:/centdb,$FASTA_DIR:/work $SING_IMG/centrifuge.img"
+
+$centrifuge -x /centdb/bvf -1 /work/"$FASTA"_1.fastq.gz -2 /work/"$FASTA"_2.fastq.gz -S /work/cfuge/$FASTA-centrifuge_hits.tsv --report-file /work/cfuge/$FASTA-centrifuge_repor.tsv -$FILE_TYPE --exclude-taxids $EXCLUDE
+
+Nevermind...got this error:
+Error, fewer reads in file specified with -1 than in file specified with -2
+terminate called after throwing an instance of 'int'
+(ERR): centrifuge-class died with signal 6 (ABRT)
+
+AND that's because I should have been working in /trimmed *DOH*
