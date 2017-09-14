@@ -7,36 +7,43 @@ if [[ ! -d "$FASTA_DIR" ]]; then
     echo "$FASTA_DIR does not exist. Job terminated."
     exit 1
 fi
+sleep 1
 
 if [[ ! -d "$SCRIPT_DIR" ]]; then
     echo "$SCRIPT_DIR does not exist. Job terminated."
     exit 1
 fi
+sleep 1
 
 if [[ ! "$FILE_EXT" ]]; then
     echo "You must provide a FASTA extension (.fa, .fasta). Job terminated."
     exit 1
 fi
+sleep 1
 
 if [[ ! -d "$REPORT_DIR" ]]; then
     echo "$REPORT_DIR does not exist. Directory created for Centrifuge output."
     mkdir -p "$REPORT_DIR"
 fi
+sleep 1
 
 if [[ ! -d "$PLOT_OUT" ]]; then
     echo "$PLOT_OUT does not exist. Directory created for plot output"
     mkdir -p "$PLOT_OUT"
 fi
+sleep 1
 
 if [[ ! -d "$STDERR_DIR" ]]; then
     echo "$STDERR_DIR does not exist. Directory created for standard error."
     mkdir -p "$STDERR_DIR"
 fi
+sleep 1
 
 if [[ ! -d "$STDOUT_DIR" ]]; then
     echo "$STDOUT_DIR does not exist. Directory created for standard out."
     mkdir -p "$STDOUT_DIR"
 fi
+sleep 1
 
 
 #JOB SUBMISSION FOR SINGLE END DATA
